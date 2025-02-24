@@ -23,7 +23,7 @@ goto :continueScript
 :: Show the menu for "adisa" and "princ"
 :showMenu
 cls
-echo Welcome to DroydVirus, %user_name%! 
+echo Welcome to DroydVirus, To Whom i name as "owner"! 
 echo.
 echo Please choose an option:
 echo 1. Run system information test
